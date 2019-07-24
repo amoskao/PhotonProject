@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 namespace amos
 {
@@ -21,6 +22,11 @@ namespace amos
         public Vector3 positionNext;
         [Header("同步平滑速度"), Range(0.1f, 5f)]
         public float smoothSpeed = 0.5f;
+        [Header("圖片渲染器")]
+        public SpriteRenderer sr;
+
+        [Header("玩家名稱介面")]
+        public Text textName;
 
         private void Start()
         {
@@ -29,14 +35,20 @@ namespace amos
             {
                //player.enabled = false; //玩家元件=關閉
                 obj.SetActive(false);   //攝影機物件(關閉)
-
+                textName.text=pv.Owner.NickName;
             }
+            else
+            {
+                textName.text = PhotonNetwork.NickName;
+            }
+                
         }
         private void FixedUpdate()
         {
             if (pv.IsMine)
             {
                 Move();
+                FlipSprite();
             }
             else
             {
@@ -58,8 +70,29 @@ namespace amos
         {
 
             rig.AddForce((
-                transform.right * Input.GetAxisRaw("Horizontal") + 
-                transform.up * Input.GetAxisRaw("Vertical"))*speed);
+                transform.right * Input.GetAxisRaw("Horizontal") +
+                transform.up * Input.GetAxisRaw("Vertical")) * speed);
+        }
+
+        [PunRPC]
+        private void RPCFlipSprite(bool flip)
+        {
+            sr.flipX = flip;
+        }
+
+        private void FlipSprite()
+        {
+            if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                sr.flipX = false;
+                pv.RPC("RPCFlipSprite", RpcTarget.All, false);
+            }
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                sr.flipX = true;
+                pv.RPC("RPCFlipSprite", RpcTarget.All, true);
+
+            }
         }
 
         //同步資料方法( Player : MonoBehaviourPun,IPunObservable寫好後按燈泡 實作  刪掉裡面那行程式)
@@ -74,6 +107,8 @@ namespace amos
                 positionNext = (Vector3)stream.ReceiveNext();   //同步座標資訊=(轉型)接收資料
             }
         }
+
+        
 
                     
     }

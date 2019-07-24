@@ -15,7 +15,17 @@ public class Launcher : MonoBehaviourPunCallbacks
     
     public string namePlayer, nameCreateRoom, nameJoinRoom;
 
-    public string NamePlayer { get => namePlayer; set => namePlayer = value; }
+    public string NamePlayer
+    {
+        get => namePlayer;
+        set
+        {
+            namePlayer = value;
+            PhotonNetwork.NickName = namePlayer;
+                
+        }
+    }
+
     public string NameCreateRoom { get => nameCreateRoom; set => nameCreateRoom = value; }
     public string NameJoinRoom { get => nameJoinRoom; set => nameJoinRoom = value; }
 
