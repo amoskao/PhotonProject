@@ -5,6 +5,7 @@ namespace amos
 {
     public class Player : MonoBehaviourPun,IPunObservable
     {
+        #region 欄位
         [Header("剛體")]
         public Rigidbody2D rig;
         [Header("速度")]
@@ -27,7 +28,9 @@ namespace amos
 
         [Header("玩家名稱介面")]
         public Text textName;
+        #endregion
 
+        #region 事件
         private void Start()
         {
             //如果 不是自己的物件
@@ -35,7 +38,7 @@ namespace amos
             {
                //player.enabled = false; //玩家元件=關閉
                 obj.SetActive(false);   //攝影機物件(關閉)
-                textName.text=pv.Owner.NickName;
+                textName.text=pv.Owner.NickName; 
             }
             else
             {
@@ -49,13 +52,14 @@ namespace amos
             {
                 Move();
                 FlipSprite();
+                Shoot();
             }
             else
             {
                 SmoohtMove();
             }
         }
-
+        #endregion
 
         /// <summary>
         /// 其他玩家的物件同步平滑移動
@@ -107,9 +111,19 @@ namespace amos
                 positionNext = (Vector3)stream.ReceiveNext();   //同步座標資訊=(轉型)接收資料
             }
         }
+        [Header("生成子彈位置")]
+        public Transform pointBullet;
+        [Header("子彈")]
+        public GameObject bullet;
 
-        
-
+        private void Shoot()
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                //伺服器.實例化(物件名稱，座標，角度)
+                PhotonNetwork.Instantiate(bullet.name, pointBullet.position, pointBullet.rotation);
+            }
+        }
                     
     }
 }
