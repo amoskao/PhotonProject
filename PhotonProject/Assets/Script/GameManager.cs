@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+//using UnityEngine.UI;
 using Photon.Pun;
+
 public class GameManager : MonoBehaviour
 {
     [Header("玩家預製物")]
     public GameObject prefabPlayer;
     [Header("生成座標")]
     public Transform[] spawnPoints;
-    [Header("連線人數介面")]
-    public Text textCCU;
+    //[Header("連線人數介面")]
+    //public Text textCCU;
 
     private void SpawnPlayer()
     {
@@ -20,6 +21,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SpawnPlayer();
-        textCCU.text = PhotonNetwork.CountOfPlayersInRooms+"/20";
+       //textCCU.text = PhotonNetwork.CountOfPlayersInRooms+"/20";
     }
 }
